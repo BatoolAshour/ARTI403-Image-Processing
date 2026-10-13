@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}Midterm_Revision/
+      url: https://batoolashour.github.io/ARTI403-Image-Processing/Midterm_Revision/
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
