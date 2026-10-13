@@ -1,0 +1,43 @@
+# Publishes the Midterm_Revision study site to GitHub Pages.
+# Live at: https://batoolashour.github.io/ARTI403-Image-Processing/Midterm_Revision/
+name: Deploy Midterm Revision site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Midterm_Revision/**"
+      - ".github/workflows/deploy-midterm-revision.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}Midterm_Revision/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      # Static site, no build step: copy only the study site into its subfolder.
+      - name: Assemble site
+        run: |
+          mkdir -p _site/Midterm_Revision
+          cp -R Midterm_Revision/. _site/Midterm_Revision/
+          find _site -name ".DS_Store" -delete
+          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=Midterm_Revision/"><title>Redirecting…</title><a href="Midterm_Revision/">Image Processing Midterm Revision</a>\n' > _site/index.html
+          touch _site/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
